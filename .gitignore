@@ -1,0 +1,12 @@
+# Android Studio / IntelliJ
+.idea/
+**/.idea/
+
+# Build outputs
+**/build/
+
+# Heap dumps
+*.hprof
+
+# Local config
+local.properties
