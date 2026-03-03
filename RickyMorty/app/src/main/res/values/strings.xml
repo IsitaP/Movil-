@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">rickyMorty</string>
+    <string name="label_id">ID: %1$d</string>
+    <string name="label_status">Status: %1$s</string>
+    <string name="label_species">Species: %1$s</string>
+    <string name="label_gender">Gender: %1$s</string>
+    <string name="label_origin">Origin: %1$s</string>
+    <string name="label_location">Location: %1$s</string>
 </resources>
