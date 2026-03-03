@@ -19,9 +19,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.rickymorty.R
 import com.example.rickymorty.data.model.Character
@@ -33,40 +31,6 @@ fun CharacterDetailScreen(
     onBack: () -> Unit
 ) {
     val ctx = LocalContext.current
-
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-
-    // Animación gradiente fondo
-    val animatedOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1000f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(6000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = ""
-    )
-
-    val backgroundBrush = Brush.linearGradient(
-        colors = listOf(Color(0xFF00C6FF), Color(0xFF0072FF)),
-        start = Offset(0f, animatedOffset),
-        end = Offset(animatedOffset, 0f)
-    )
-
-    // Animación borde circular
-    val borderRotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(4000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = ""
-    )
-
-    val borderBrush = Brush.sweepGradient(
-        colors = listOf(Color.Cyan, Color.Magenta, Color.Blue, Color.Cyan)
-    )
 
     Scaffold(
         topBar = {
@@ -84,31 +48,60 @@ fun CharacterDetailScreen(
         }
     ) { padding ->
 
-        Box(
+        val infiniteTransition = rememberInfiniteTransition(label = "")
+
+        // Animación gradiente superior
+        val animatedOffset by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 800f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(6000, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = ""
+        )
+
+        val topGradient = Brush.linearGradient(
+            colors = listOf(Color(0xFF00C6FF), Color(0xFF0072FF)),
+            start = Offset(0f, animatedOffset),
+            end = Offset(animatedOffset, 0f)
+        )
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(backgroundBrush)
                 .padding(padding)
         ) {
 
-            Column(
+            //  MITAD SUPERIOR (ANIMACIÓN)
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(topGradient),
+                contentAlignment = Alignment.Center
             ) {
 
-                Spacer(modifier = Modifier.height(20.dp))
+                val borderRotation by infiniteTransition.animateFloat(
+                    initialValue = 0f,
+                    targetValue = 360f,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(4000, easing = LinearEasing),
+                        repeatMode = RepeatMode.Restart
+                    ),
+                    label = ""
+                )
 
-                // Imagen con borde animado
+                val borderBrush = Brush.sweepGradient(
+                    colors = listOf(Color.Cyan, Color.Magenta, Color.Blue, Color.Cyan)
+                )
+
                 Box(contentAlignment = Alignment.Center) {
 
                     Box(
                         modifier = Modifier
                             .size(220.dp)
-                            .graphicsLayer {
-                                rotationZ = borderRotation
-                            }
+                            .graphicsLayer { rotationZ = borderRotation }
                             .border(
                                 width = 6.dp,
                                 brush = borderBrush,
@@ -131,29 +124,30 @@ fun CharacterDetailScreen(
                             }
                     )
                 }
+            }
 
-                Spacer(modifier = Modifier.height(20.dp))
+            // MITAD INFERIOR (NORMAL)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(Color.White)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.Start
+            ) {
 
-                // Nombre con gradiente
-                Text(
-                    text = character.name,
-                    style = TextStyle(
-                        brush = Brush.linearGradient(
-                            colors = listOf(Color.Magenta, Color.Cyan)
-                        ),
-                        fontSize = 28.sp
-                    )
-                )
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Información usando resources
-                Text(stringResource(R.string.label_id, character.id))
-                Text(stringResource(R.string.label_status, character.status))
-                Text(stringResource(R.string.label_species, character.species))
-                Text(stringResource(R.string.label_gender, character.gender))
-                Text(stringResource(R.string.label_origin, character.origin.name))
-                Text(stringResource(R.string.label_location, character.location.name))
+                    Text(stringResource(R.string.label_id, character.id))
+                    Text(stringResource(R.string.label_status, character.status))
+                    Text(stringResource(R.string.label_species, character.species))
+                    Text(stringResource(R.string.label_gender, character.gender))
+                    Text(stringResource(R.string.label_origin, character.origin.name))
+                    Text(stringResource(R.string.label_location, character.location.name))
+                }
             }
         }
     }
